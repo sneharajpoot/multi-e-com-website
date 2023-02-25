@@ -1,0 +1,25 @@
+ng g module pages/index --route index --module app.module
+ng g module pages --route pages --module app.module
+ng g module pages/404 --route 404 --module app.module
+ng g module pages/blog-single --route blog-single --module app.module
+ng g module pages/blog --route blog --module app.module
+ng g module pages/cart --route cart --module app.module
+ng g module pages/checkout --route checkout --module app.module
+ng g module pages/contact --route contact --module app.module
+ng g module pages/login --route login --module app.module
+ng g module pages/product-details --route product-details --module app.module
+ng g module pages/shop --route shop --module app.module
+ng g module pages/filter --route filter --module app.module
+ng g module pages/addressselect --route addressselect --module app.module
+
+
+ng g module pages/wishlist --route wishlist --module app.module
+ng g module pages/account --route account --module app.module
+
+
+
+
+
+ng g c comman/header
+ng g c comman/main
+ng g c comman/footer
