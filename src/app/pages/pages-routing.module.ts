@@ -18,7 +18,8 @@ const routes: Routes = [
       { path: 'not-found', loadChildren: () => import('./not-found/not-found.module').then(m => m.NotFoundModule) },
       { path: 'filter', loadChildren: () => import('./filter/filter.module').then(m => m.FilterModule) },
       { path: 'addressselect', loadChildren: () => import('./addressselect/addressselect.module').then(m => m.AddressselectModule) },
-    ]
+      { path: 'orderdetail', loadChildren: () => import('./orderdetail/orderdetail.module').then(m => m.OrderdetailModule) },
+]
   },
 ];
 

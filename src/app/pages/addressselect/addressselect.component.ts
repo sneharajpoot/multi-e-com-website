@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BuyerAddressService } from 'src/app/service/api/buyer-address.service';
 import { CartService } from 'src/app/service/api/cart.service';
+import { OrdersService } from 'src/app/service/api/orders.service';
 import { GlobalService } from 'src/app/service/global.service';
 
 @Component({
@@ -13,17 +14,21 @@ export class AddressselectComponent implements OnInit {
   cBuyer: any;
   carts: any;
   ImgUrl: string;
-  myAddress: any;
+  myAddress: any = [];
 
   totalAmount: number = 0;
   shippingCharges: number = 0;
   totalDiscount: number = 0;
   netAmount: number = 0;
 
+  cAddress: any = 0;
+  paymentType: any = 0;
+
   constructor(
     public gbls: GlobalService,
     public cart: CartService,
     public buyerAddress: BuyerAddressService,
+    public order: OrdersService
   ) {
     this.ImgUrl = this.gbls.ImgUrl
   }
@@ -48,12 +53,14 @@ export class AddressselectComponent implements OnInit {
       }
     })
   }
+
   getbuyeraddress() {
     this.buyerAddress.getbuyeraddress({ buyer_id: this.cBuyer.id }).subscribe(data => {
       console.log("data", data)
       this.myAddress = data.data;
     })
   }
+
   address: any = {
     name: '',
     address1: '',
@@ -109,6 +116,41 @@ export class AddressselectComponent implements OnInit {
     this.buyerAddress.updatebuyeraddress(id, p).subscribe(data => {
       console.log("data", data)
     })
+  }
+
+
+  placeorder() {
+    try {
+
+      console.log("paymentType", this.paymentType)
+      console.log("paymentType", this.myAddress[this.cAddress])
+      console.log("paymentType", this.paymentType)
+      let body = {
+        buyer_id: this.cBuyer.id,
+        address_id: this.myAddress[this.cAddress]?.id,
+      }
+      console.log("body", body);
+      // return;
+      this.gbls.loaderStart();
+      this.order.placeorder(body).subscribe(
+        (data: any) => {
+          this.gbls.loaderStop();
+          if (data.result) {
+            // this.getcart(this.filter.buyer_id)
+            this.gbls.successNotification(data.message);
+          } else {
+            this.gbls.errorNotification(data.message);
+          }
+        },
+        (error: any) => {
+          this.gbls.loaderStop();
+          this.gbls.errorNotification('Server Not Responding');
+        }
+      );
+    } catch (e) {
+      this.gbls.loaderStop();
+      this.gbls.errorNotification(' Catch Error');
+    }
   }
 
 }

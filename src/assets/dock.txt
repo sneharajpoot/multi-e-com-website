@@ -11,6 +11,7 @@ ng g module pages/product-details --route product-details --module app.module
 ng g module pages/shop --route shop --module app.module
 ng g module pages/filter --route filter --module app.module
 ng g module pages/addressselect --route addressselect --module app.module
+ng g module pages/orderdetail --route orderdetail --module app.module
 
 
 ng g module pages/wishlist --route wishlist --module app.module

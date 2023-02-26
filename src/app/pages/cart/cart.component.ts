@@ -110,4 +110,7 @@ export class CartComponent implements OnInit {
     })
   }
 
+  redirect(p:any){
+    this.gbls.redirect('/addressselect',p)
+  }
 }

@@ -1,19 +1,113 @@
-<div class="row">
-    <h4>1. Select Address</h4>
-    <div class="col-12">
-        <ul>
-            <li *ngFor="let a of myAddress">
-                <label> <input type="radio" id="rdoAdd_{{a.id}}"> {{a.name}} </label>
-            </li>
-        </ul>
-    </div>
-    <h4>2. Your Items</h4>
-    <div class="col-12"></div>
-    <h4>3. Payment</h4>
-    <div class="col-12"></div>
-    <h4>4. Offer</h4>
-    <div class="col-12"></div>
-    <h4>5. Review items and delivery</h4>
-    <div class="col-12"></div>
+<section id="do_action">
+    <div class="container">
+        <div class="row">
 
-</div>
+            <div class="col-12">
+                <h4>1. Select Address</h4>
+                <ul>
+                    <li *ngFor="let a of myAddress; let index = index">
+                        <label>{{index}}. <input type="radio" name="rdoAddress" id="rdoAdd_{{a.id}}" [value]="index"
+                                [(ngModel)]="cAddress">
+
+                            {{a.name}}
+                            {{a.address1}},
+                            {{a.address2}},
+                            {{a.landmark}},
+                            {{a.city}},
+                            {{a.country}},
+                            {{a.state}} -
+                            {{a.zip}}
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-8">
+                <h4>2. Your Items</h4>
+                <div class="row">
+                    <div class="col-md-8">
+
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr class="cart_menu">
+                                    <td class="image">Item</td>
+                                    <td class="description"></td>
+                                    <td class="price">Price</td>
+                                    <td class="quantity">Quantity</td>
+                                    <td class="total">Total</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let i of carts">
+                                    <td class="cart_product">
+                                        <a href=""><img style="width: 50px; height: 50px;"
+                                                [src]="ImgUrl + '/upload/' + i.icon_image" alt=""></a>
+                                    </td>
+                                    <td class="cart_description">
+                                        {{i.title}}
+                                    </td>
+                                    <td class="cart_price">
+                                        <p>${{i.price}}</p>
+                                    </td>
+                                    <td class="cart_quantity">
+                                        {{i.quantity}}
+                                    </td>
+                                    <td class="cart_total">
+                                        <p class="cart_total_price">${{i.price}}</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <ul>
+                            <li> Total Amount <span>{{totalAmount}}</span></li>
+                            <li>Discount <span>{{totalDiscount}}</span></li>
+                            <li>Shipping Charges<span>{{shippingCharges}}</span></li>
+                            <li>Total <span>{{netAmount}}</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <h4>3. Offer</h4>
+            </div>
+            <div class="col-12">
+                <h4>4. Payment</h4>
+                <label> <input type="radio" value="0" name="rdopaymentType" [(ngModel)]="paymentType"> PAY ONLINE
+                </label>
+                <label> <input type="radio" value="1" name="rdopaymentType" [(ngModel)]="paymentType"> COD </label>
+
+
+            </div>
+            <div class="col-12">
+                <h4>5. Review items and delivery</h4>
+                <span><b>Delivery Address</b>
+                    <Address>
+                        {{myAddress[cAddress]?.name}}
+                        {{myAddress[cAddress]?.address1}},
+                        {{myAddress[cAddress]?.address2}},
+                        {{myAddress[cAddress]?.landmark}},
+                        {{myAddress[cAddress]?.city}},
+                        {{myAddress[cAddress]?.country}},
+                        {{myAddress[cAddress]?.state}} -
+                        {{myAddress[cAddress]?.zip}}
+                    </Address>
+                </span>
+                <br>
+                <span>
+                    <b> netAmount :</b> $ {{netAmount}}
+                </span> <br>
+                <span>
+                    <b> Payment Type :</b>
+
+                    <span *ngIf="paymentType==0"> PAY ONLINE </span>
+                    <span *ngIf="paymentType==1"> COD </span>
+
+                </span>
+
+                <button (click)="placeorder()">Place Order</button>
+            </div>
+
+        </div>
+    </div>
+</section>
