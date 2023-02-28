@@ -18,7 +18,7 @@ export class OrderdetailComponent implements OnInit {
     this.ImgUrl = this.gbls.ImgUrl;
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
 
     this.gbls.LoggedUser.subscribe((data: any) => {
       if (data) {
@@ -31,12 +31,22 @@ export class OrderdetailComponent implements OnInit {
     })
   }
   getorder() {
-    // console.log("data.getorder=======>",  this.cBuyer.id )
 
     this.orders.getorder({ buyer_id: this.cBuyer.id }).subscribe(data => {
-      // console.log("data.data=======>", data.data)  
       this.ordersDetail = data.data;
     })
   }
+  cancelcomment:string = '';
+  cancelorder(comment:any) {
+     
+    this.orders.cancelorder({ comment: comment ||''} ).subscribe(data => {
+      if (data.result) {
+        this.getorder();
+        this.gbls.successNotification(data.message);
+      } else {
+        this.gbls.errorNotification(data.message);
+      }
+    })
 
+  }
 }

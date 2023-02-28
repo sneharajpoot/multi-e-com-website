@@ -10,6 +10,7 @@ export class OrdersService {
   placeorder(p: any) { return this.rest.post('placeorder', p) }
   getorder(p: any) { return this.rest.post('getorder', p) }
   getOrderBuyers(p: any) { return this.rest.post('getOrderBuyers', p) }
+  cancelorder(p: any) { return this.rest.post('cancelorder', p) } 
   
   
 

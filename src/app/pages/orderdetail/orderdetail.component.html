@@ -27,7 +27,8 @@
                            <p>payment status: {{i.payment_status}}</p> 
                            <p>status: {{i.status}}</p> 
                            <p>tracking status: {{i.tracking_status}}</p>
-
+<textarea [(ngModel)]="cancelcomment"></textarea>
+<input type="button" (click)="cancelorder(cancelcomment)" value="Cancel">
                         </td> 
                     </tr>
                 </tbody>
