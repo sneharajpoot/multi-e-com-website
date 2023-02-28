@@ -137,6 +137,7 @@ export class AddressselectComponent implements OnInit {
           this.gbls.loaderStop();
           if (data.result) {
             // this.getcart(this.filter.buyer_id)
+            this.gbls.redirect('/orderdetail')
             this.gbls.successNotification(data.message);
           } else {
             this.gbls.errorNotification(data.message);
