@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BrandService } from 'src/app/service/api/brand.service';
-import { CardService } from 'src/app/service/api/card.service';
+import { CartService } from 'src/app/service/api/cart.service';
 import { CategoryService } from 'src/app/service/api/category.service';
 import { ProductService } from 'src/app/service/api/product.service';
 import { GlobalService } from 'src/app/service/global.service';
@@ -19,7 +19,7 @@ export class FilterComponent implements OnInit {
 
   constructor(public gbls: GlobalService,
     public product: ProductService,
-    public cart: CardService,
+    public cart: CartService,
     public category: CategoryService,
     public brand: BrandService,
   ) {

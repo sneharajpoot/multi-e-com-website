@@ -21,20 +21,9 @@ export class RestService {
   }
 
   config: any = {
-    Condition: "",
-    Type: "MT5",
     AppName: '',
-    PrimaryUrl: 'http://localhost:8082',
-    SecondaryUrl: '',
-    PHPURL: '',
-    Referal: '',
-    ImgUrl: 'http://localhost:8082',
-    verifyLink: '',
-    AutoLogin:'',
-    LeverageList: '',
-    mailerCode:[],
-    BASECURRENCY:"USD",
-    BASECURRENCYSYMBOL:"$"
+    PrimaryUrl: '',
+    ImgUrl: '',
   };
   // setupConf: any = (setupe as any).default;
 
@@ -74,17 +63,7 @@ export class RestService {
             this.config = {
               AppName: data.AppName,
               PrimaryUrl: data.PrimaryUrl,
-              SecondaryUrl: data.SecondaryUrl,
-              PHPURL: data.PHPURL,
-              Referal: data.Referal,
               ImgUrl: data.ImgUrl,
-              verifyLink: data.verifyLink,
-              AutoLogin: data.AutoLogin,
-              LeverageList: data.LeverageList,
-    
-              mailerCode:  data.mailerCode,
-              BASECURRENCY:  data.BASECURRENCY,
-              BASECURRENCYSYMBOL:  data.BASECURRENCYSYMBOL,
             };
 
             resolve(true);

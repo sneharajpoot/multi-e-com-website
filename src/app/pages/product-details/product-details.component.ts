@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CardService } from 'src/app/service/api/card.service';
+import { CartService } from 'src/app/service/api/cart.service';
 import { ProductService } from 'src/app/service/api/product.service';
 import { GlobalService } from 'src/app/service/global.service';
 
@@ -13,14 +13,14 @@ export class ProductDetailsComponent implements OnInit {
 
   products: any;
   ImgUrl: string;
-  cBuyer: any;
+  cUser: any;
   quantity: number = 1;
   cItem: number = 0;
   cImage: any;
 
   constructor(public gbls: GlobalService,
     public product: ProductService,
-    public cart: CardService,
+    public cart: CartService,
     private route: ActivatedRoute
   ) {
     this.ImgUrl = this.gbls.ImgUrl;
@@ -44,7 +44,7 @@ export class ProductDetailsComponent implements OnInit {
     });
 
     this.gbls.LoggedUser.subscribe((data: any) => {
-      this.cBuyer = data;
+      this.cUser = data;
     })
   }
   redirect(p: any) {
@@ -68,15 +68,24 @@ export class ProductDetailsComponent implements OnInit {
 
   addcart(p: any) {
     console.log(">>>>", p);
+    
+   
+    if(!this.cUser) {
+      this.gbls.addCartLocalStorage(p);
+      return;
+    }
+
     let par = {
       product_id: p.productList[this.cItem].id,
       product_item_id: p.productItemList[this.cItem].id || '',
       quantity: this.quantity,
-      buyer_id: this.cBuyer.id,
+      buyer_id: this.cUser?.id || 0,
       address_id: this.cItem,
       color: p.productItemList[this.cItem].color || '',
       size: p.productItemList[this.cItem].size || '',
     }
+
+
     this.cart.addcart(par).subscribe(data => {
 
       this.gbls.loaderStop();

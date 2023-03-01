@@ -33,17 +33,19 @@
 						</td>
 						<td class="cart_quantity">
 							<div class="cart_quantity_button">
-								<a class="cart_quantity_up" href=""> + </a>
+								<button class="cart_quantity_down" (click)="changeQuntity(i.id, i.quantity - 1)"  [disabled]="i.quantity <=1" >-</button>
+								<!-- <a class="cart_quantity_up" (click)="changeQuntity(i.id, i.quantity - 1)"  [disabled]="i.quantity <=1"> - </a> -->
 								<input class="cart_quantity_input" type="text" name="quantity" [value]="i.quantity"
 									autocomplete="off" size="2">
-								<a class="cart_quantity_down" href=""> - </a>
+								<button class="cart_quantity_up" (click)="changeQuntity(i.id, i.quantity + 1)"    >-</button>
+								<!-- <a class="cart_quantity_down"  (click)="changeQuntity(i.id, i.quantity + 1)"> + </a> -->
 							</div>
 						</td>
 						<td class="cart_total">
 							<p class="cart_total_price">${{i.price}}</p>
 						</td>
 						<td class="cart_delete">
-							<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+							<a class="cart_quantity_delete" (click)="deleteCart(i.id)" ><i class="fa fa-times"></i></a>
 						</td>
 					</tr>
 				</tbody>

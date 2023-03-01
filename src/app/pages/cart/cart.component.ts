@@ -9,7 +9,7 @@ import { GlobalService } from 'src/app/service/global.service';
   styleUrls: ['./cart.component.scss']
 })
 export class CartComponent implements OnInit {
-  cBuyer: any;
+  cUser: any;
   carts: any;
   ImgUrl: string;
   myAddress: any;
@@ -30,7 +30,7 @@ export class CartComponent implements OnInit {
   ngOnInit(): void {
     this.gbls.LoggedUser.subscribe((data: any) => {
       if (data) {
-        this.cBuyer = data;
+        this.cUser = data;
         this.getbuyeraddress();
       }
     })
@@ -48,7 +48,7 @@ export class CartComponent implements OnInit {
     })
   }
   getbuyeraddress() {
-    this.buyerAddress.getbuyeraddress({ buyer_id: this.cBuyer.id }).subscribe(data => {
+    this.buyerAddress.getbuyeraddress({ buyer_id: this.cUser.id }).subscribe(data => {
       console.log("data", data)
       this.myAddress = data.data;
     })
@@ -66,7 +66,7 @@ export class CartComponent implements OnInit {
   }
   addbuyeraddress() {
     let p = {
-      buyer_id: this.cBuyer.id,
+      buyer_id: this.cUser.id,
       name: this.address.name,
       address1: this.address.address1,
       address2: this.address.address2,
@@ -94,7 +94,7 @@ export class CartComponent implements OnInit {
 
   updatebuyeraddress(id: number) {
     let p = {
-      buyer_id: this.cBuyer.id,
+      buyer_id: this.cUser.id,
       name: '',
       address1: '',
       address2: '',
@@ -110,7 +110,50 @@ export class CartComponent implements OnInit {
     })
   }
 
-  redirect(p:any){
-    this.gbls.redirect('/addressselect',p)
+  deleteCart(id: number) {
+    if (this.cUser?.id) {
+
+      this.cart.deletecart({ id: id, buyer_id: this.cUser.id }).subscribe(data => {
+
+      })
+
+    } else {
+
+      for (var i = 0; i < this.carts.length; i++) {
+        if (this.carts[i].id == id) {
+          this.carts.splice(i, 1);
+          break;
+        }
+      }
+
+      this.gbls.addCartLocalStorage(this.carts);
+
+    }
+  }
+
+  changeQuntity(id: number, quntity: number) {
+    if (this.cUser?.id) {
+
+      this.cart.updatecart({ id: id, buyer_id: this.cUser.id, quntity: quntity }).subscribe(data => {
+
+      })
+
+    } else {
+
+      for (var i = 0; i < this.carts.length; i++) {
+        if (this.carts[i].id == id) {
+          this.carts[i].quntity = Number( quntity || 1 );
+          break;
+        }
+      }
+
+      this.gbls.addCartLocalStorage(this.carts);
+
+    }
+  }
+
+
+  redirect(p: any) {
+    this.gbls.redirect('/addressselect', p)
   }
 }

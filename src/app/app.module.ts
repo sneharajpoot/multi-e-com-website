@@ -121,7 +121,10 @@ const customNotifierOptions: NotifierOptions = {
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     RestService, GlobalService,
-    // { provide: APP_INITIALIZER, useFactory: initializeApp1, deps: [AppInitService], multi: true }
+    
+    AppInitService,
+    { provide: APP_INITIALIZER, useFactory: initializeApp1, deps: [AppInitService], multi: true },
+
   ],
   bootstrap: [AppComponent]
 })

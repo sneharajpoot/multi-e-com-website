@@ -9,7 +9,7 @@ import { NotifierService } from 'angular-notifier';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { RestService } from './rest.service';
 import ls from 'localstorage-slim';
-import { CardService } from './api/card.service';
+import { CartService } from './api/cart.service';
 
 // import * as CryptoJS from 'crypto-js';   
 // import { parse } from 'path';
@@ -38,7 +38,7 @@ export class GlobalService {
     public notifier: NotifierService,
     private activatedRoute: ActivatedRoute,
     private ngxService: NgxUiLoaderService,
-    private cardService: CardService
+    private cardService: CartService
 
   ) {
 
@@ -48,14 +48,14 @@ export class GlobalService {
     this.loadData();
 
     this.LoggedUser.subscribe((data: any) => {
-      console.log(">>>>",data)
+      console.log(">>>>", data)
 
       if (data) {
         this.cuser = data;
-        this.updateCart();
         console.log("this.cuser", this.cuser);
-
       };
+      this.updateCart();
+
     });
   }
   loaderStart() { this.ngxService.start(); }
@@ -77,9 +77,18 @@ export class GlobalService {
   }
 
   updateCart() {
-    this.cardService.getcart({ buyer_id: this.cuser.id }).subscribe((data: any) => {
-      this.cartsSrc.next(data.data);
-    });
+    console.log("this.cuser", this.cuser)
+    if (this.cuser) {
+      this.cardService.getcart({ buyer_id: this.cuser.id }).subscribe((data: any) => {
+        this.cartsSrc.next(data.data);
+      });
+    } else {
+      let cart = this.getCartLocalStorage();
+
+      console.log("cart----", cart)
+      this.cartsSrc.next(cart);
+
+    }
   }
 
   //===User
@@ -137,10 +146,10 @@ export class GlobalService {
       console.log("cBuyer", cBuyer)
 
       if (cBuyer != null) {
-      console.log("cBuyer1")
+        console.log("cBuyer1")
 
-          // var u = JSON.parse(cBuyer);
-      console.log("cBuyer1")
+        // var u = JSON.parse(cBuyer);
+        console.log("cBuyer1")
 
         this.LoggedUserSrc.next((cBuyer));
         console.log("cBuyer1")
@@ -694,6 +703,25 @@ export class GlobalService {
   getLocalStorage(key: string) {
     const res = ls.get(key, { decrypt: true });
     return res; // { a: "currentdate", b: "null", c: false, d: 'superman', e: 1234 }
+  }
+
+  addCartLocalStorage(data: any) {
+    data.quantity = 1;
+    let cart: any = this.getLocalStorage('cartData') || [];
+    if (cart?.length) {
+      cart.push(data);
+      let c = this.setLocalStorage('cartData', [data]);
+    } else {
+      this.setLocalStorage('cartData', [data]);
+    }
+    this.updateCart();
+  }
+
+
+  getCartLocalStorage() {
+    let cart: any = this.getLocalStorage('cartData');
+    console.log("cart", cart)
+    return cart;
   }
 
 }

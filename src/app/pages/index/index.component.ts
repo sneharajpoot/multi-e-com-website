@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CardService } from 'src/app/service/api/card.service';
+import { CartService } from 'src/app/service/api/cart.service';
 import { ProductService } from 'src/app/service/api/product.service';
 import { GlobalService } from 'src/app/service/global.service';
 
@@ -11,11 +11,11 @@ import { GlobalService } from 'src/app/service/global.service';
 export class IndexComponent implements OnInit {
   products: any;
   ImgUrl: string;
-  cBuyer: any;
+  cUser: any;
 
   constructor(public gbls: GlobalService,
     public product: ProductService,
-    public cart: CardService) {
+    public cart: CartService) {
     this.ImgUrl = this.gbls.ImgUrl;
 
     this.getProduct();
@@ -25,7 +25,7 @@ export class IndexComponent implements OnInit {
 
   ngOnInit(): void {
     this.gbls.LoggedUser.subscribe((data: any) => {
-      this.cBuyer = data;
+      this.cUser = data;
     })
   }
   redirect(p: any) {
@@ -44,16 +44,23 @@ export class IndexComponent implements OnInit {
   }
 
   addcart(p: any) {
-    console.log(">>>>", p);
+    console.log(">>>>", p, this.cUser);
+
+    if(!this.cUser) {
+      this.gbls.addCartLocalStorage( p);
+      return;
+    }
+    
     let par = {
       product_id: p.product_id,
       product_item_id: p.product_item_id || '',
       quantity: 1,
-      buyer_id: this.cBuyer.id,
+      buyer_id: this.cUser?.id || 0,
       address_id: 0,
       color: p.color || '',
       size: p.size || '',
     }
+    
     this.cart.addcart(par).subscribe(data => {
 
       this.gbls.loaderStop();
