@@ -28,12 +28,14 @@ export class CartComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.gbls.LoggedUser.subscribe((data: any) => {
       if (data) {
         this.cUser = data;
         this.getbuyeraddress();
       }
-    })
+    });
+
     this.gbls.carts.subscribe((data: any) => {
       if (data) {
         this.carts = data;
@@ -111,6 +113,7 @@ export class CartComponent implements OnInit {
   }
 
   deleteCart(id: number) {
+    console.log("deleteCart(id", id)
     if (this.cUser?.id) {
 
       this.cart.deletecart({ id: id, buyer_id: this.cUser.id }).subscribe(data => {
@@ -119,41 +122,42 @@ export class CartComponent implements OnInit {
 
     } else {
 
-      for (var i = 0; i < this.carts.length; i++) {
-        if (this.carts[i].id == id) {
-          this.carts.splice(i, 1);
-          break;
-        }
-      }
+      // for (var i = 0; i < this.carts.length; i++) {
+      //   if (this.carts[i].id == id) {
+      //     this.carts.splice(i, 1);
+      //     break;
+      //   }
+      // }
 
-      this.gbls.addCartLocalStorage(this.carts);
+      this.gbls.deleteCart(id);
 
     }
   }
 
-  changeQuntity(id: number, quntity: number) {
+  changequantity(index: number, quantity: number) {
+
+    console.log('....', quantity)
+
     if (this.cUser?.id) {
 
-      this.cart.updatecart({ id: id, buyer_id: this.cUser.id, quntity: quntity }).subscribe(data => {
+      this.cart.updatecart({ id: this.carts[index].id, buyer_id: this.cUser.id, quantity: quantity }).subscribe(data => {
 
       })
 
     } else {
 
-      for (var i = 0; i < this.carts.length; i++) {
-        if (this.carts[i].id == id) {
-          this.carts[i].quntity = Number( quntity || 1 );
-          break;
-        }
-      }
+      this.carts[index].quantity = Number(quantity || 1);
 
-      this.gbls.addCartLocalStorage(this.carts);
+      this.gbls.addCartLocalStorage(this.carts[index], 'cart');
 
     }
   }
 
-
   redirect(p: any) {
-    this.gbls.redirect('/addressselect', p)
+    if (this.cUser?.id) {
+      this.gbls.redirect('/addressselect', p);
+    } else {
+      this.gbls.redirect('/login', p);
+    }
   }
 }

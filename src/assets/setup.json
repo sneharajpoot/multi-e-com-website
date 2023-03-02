@@ -1,5 +1,5 @@
 { 
     "AppName": "",
-    "PrimaryUrl": "http://localhost:7000",
-    "ImgUrl": "http://localhost:7000/upload"
+    "PrimaryUrl": "http://localhost:3000",
+    "ImgUrl": "http://localhost:3000/upload"
   }

@@ -697,31 +697,84 @@ export class GlobalService {
 
 
   setLocalStorage(key: string, value: any) {
-    return ls.set(key, value, { encrypt: true }); // "mÆk¬k§m®À½½°¹¿¯..."
+    return ls.set(key, value, { encrypt: false }); // "mÆk¬k§m®À½½°¹¿¯..."
 
   }
   getLocalStorage(key: string) {
-    const res = ls.get(key, { decrypt: true });
+    const res = ls.get(key, { decrypt: false });
     return res; // { a: "currentdate", b: "null", c: false, d: 'superman', e: 1234 }
   }
 
-  addCartLocalStorage(data: any) {
-    data.quantity = 1;
-    let cart: any = this.getLocalStorage('cartData') || [];
-    if (cart?.length) {
-      cart.push(data);
-      let c = this.setLocalStorage('cartData', [data]);
-    } else {
-      this.setLocalStorage('cartData', [data]);
+  addCartLocalStorage(data: any, update: string = '') {
+    let carts: any = this.getLocalStorage('cartData') || [];
+    let newi = true;
+    for (var i = 0; i < carts.length; i++) {
+      if (carts[i].product_id == data.product_id) {
+        newi = false;
+        if (update != 'cart') {
+          carts[i].quantity = Number(carts[i].quantity || 0) + 1;
+        } else {
+          carts[i].quantity = Number(data.quantity || 1);
+        }
+        break;
+      }
     }
+
+    if (update != 'cart' && newi) {
+
+      data.quantity = 1;
+      carts.push(data);
+    }
+
+
+    if (carts?.length) {
+      // carts.push(data);
+      let c = this.setLocalStorage('cartData', carts);
+    } else {
+      this.setLocalStorage('cartData', carts);
+    }
+
     this.updateCart();
   }
-
 
   getCartLocalStorage() {
     let cart: any = this.getLocalStorage('cartData');
     console.log("cart", cart)
     return cart;
   }
+
+  updateCartCount(id: number, qtn: number) {
+
+    let carts: any = this.getLocalStorage('cartData') || [];
+
+    for (let i = 0; i < carts.length; i++) {
+      if (carts[i].product_id == id) {
+
+        carts[i].quantity = Number(carts[i].quantity) + qtn;
+        break;
+      }
+    }
+
+    this.setLocalStorage('cartData', carts);
+
+  }
+  deleteCart(product_id: number) {
+
+    let carts: any = this.getLocalStorage('cartData') || [];
+    for (let i = 0; i < carts.length; i++) {
+
+      if (carts[i].product_id == product_id) {
+        carts.splice(i, 1);
+        this.setLocalStorage('cartData', carts);
+        
+        break;
+      }
+      
+    }
+    this.updateCart();
+ 
+
+  }
+
 
 }

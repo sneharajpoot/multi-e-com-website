@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from 'src/app/service/api/cart.service';
+import { CategoryService } from 'src/app/service/api/category.service';
 import { ProductService } from 'src/app/service/api/product.service';
 import { GlobalService } from 'src/app/service/global.service';
 
@@ -12,14 +13,18 @@ export class IndexComponent implements OnInit {
   products: any;
   ImgUrl: string;
   cUser: any;
+  categorylist: any;
+  categoryList: any;
 
   constructor(public gbls: GlobalService,
     public product: ProductService,
-    public cart: CartService) {
+    public cart: CartService,
+    public category: CategoryService,
+    ) {
     this.ImgUrl = this.gbls.ImgUrl;
 
     this.getProduct();
-
+    this.getCategory()
     // this.gbls.redirect('/product-details',{productId:});
   }
 
@@ -30,6 +35,10 @@ export class IndexComponent implements OnInit {
   }
   redirect(p: any) {
     this.gbls.redirect('/product-details', p);
+  }
+  
+  redirectFilter(p: any) {
+    this.gbls.redirect('/filter', p);
   }
 
   getProduct() {
@@ -42,15 +51,23 @@ export class IndexComponent implements OnInit {
       this.products = data.data.data;
     })
   }
+  
+
+  getCategory() {
+    let par = {}
+    this.category.getCategory(par).subscribe(data => {
+      this.categoryList = data.data;
+    });
+  }
 
   addcart(p: any) {
     console.log(">>>>", p, this.cUser);
 
-    if(!this.cUser) {
-      this.gbls.addCartLocalStorage( p);
+    if (!this.cUser) {
+      this.gbls.addCartLocalStorage(p);
       return;
     }
-    
+
     let par = {
       product_id: p.product_id,
       product_item_id: p.product_item_id || '',
@@ -60,7 +77,7 @@ export class IndexComponent implements OnInit {
       color: p.color || '',
       size: p.size || '',
     }
-    
+
     this.cart.addcart(par).subscribe(data => {
 
       this.gbls.loaderStop();

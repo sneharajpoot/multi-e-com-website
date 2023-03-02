@@ -69,9 +69,9 @@ export class ProductDetailsComponent implements OnInit {
   addcart(p: any) {
     console.log(">>>>", p);
     
-   
+    p.productItemList[this.cItem].quantity = this.quantity || 1;
     if(!this.cUser) {
-      this.gbls.addCartLocalStorage(p);
+      this.gbls.addCartLocalStorage( p.productItemList[this.cItem] );
       return;
     }
 
