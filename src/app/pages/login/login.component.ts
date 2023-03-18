@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CartService } from 'src/app/service/api/cart.service';
 import { GlobalService } from 'src/app/service/global.service';
 
 @Component({
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
     // translate: TranslateService,
     private gbls: GlobalService,
     private fb: FormBuilder,
+    private cart: CartService
   ) {
 
 
@@ -199,6 +201,22 @@ export class LoginComponent implements OnInit {
           this.gbls.loaderStop();
           console.log("data", data)
           if (data.result) {
+            const cart = this.gbls.getCartLocalStorage();
+
+            cart.forEach((p: any) => {
+              let par = {
+                product_id: p.product_id,
+                product_item_id: p.product_item_id  ,
+                quantity: p.quantity,
+                buyer_id: data.data?.buyerId,
+                address_id: 0,
+                color: p.color,
+                size: p.size,
+              }
+
+              this.cart.addcart(par).subscribe((data: any) => { });
+
+            });
             let redirectURL = "/";
 
             if (redirectURL) {
@@ -221,7 +239,7 @@ export class LoginComponent implements OnInit {
               this.gbls.loadData();
               this.gbls.successNotification("You have logged in Successfully.");
 
-              this.gbls.redirect(redirectURL);
+              // this.gbls.redirect(redirectURL);
 
             } else {
               return;

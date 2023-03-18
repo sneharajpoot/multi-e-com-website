@@ -4,12 +4,21 @@ import { CartService } from 'src/app/service/api/cart.service';
 import { OrdersService } from 'src/app/service/api/orders.service';
 import { GlobalService } from 'src/app/service/global.service';
 
+// import { RazorpayService } from 'razorpay';
+// import { RazorpayService } from 'razorpay';
+// const Razorpay = require('razorpay')
+ 
+// import { Razorpay } from 'razorpay';
+// const Razorpay = require('razorpay');
+
+
 @Component({
   selector: 'app-addressselect',
   templateUrl: './addressselect.component.html',
   styleUrls: ['./addressselect.component.scss']
 })
 export class AddressselectComponent implements OnInit {
+  
 
   cBuyer: any;
   carts: any;
@@ -28,12 +37,14 @@ export class AddressselectComponent implements OnInit {
     public gbls: GlobalService,
     public cart: CartService,
     public buyerAddress: BuyerAddressService,
-    public order: OrdersService
+    public order: OrdersService, 
   ) {
     this.ImgUrl = this.gbls.ImgUrl
-  }
+  } 
 
   ngOnInit(): void {
+ 
+
     this.gbls.LoggedUser.subscribe((data: any) => {
       if (data) {
         this.cBuyer = data;
@@ -52,6 +63,37 @@ export class AddressselectComponent implements OnInit {
 
       }
     })
+  }
+
+  onPaymentResponse(response:any) {
+    console.log(response);
+    // Handle the payment response here
+  }
+  openCheckout() {
+    const options = {
+      key: 'YOUR_RAZORPAY_KEY_ID',
+      amount: 50000, // amount in paisa
+      currency: 'INR',
+      name: 'Acme Corp.',
+      description: 'Test Transaction',
+      image: 'https://example.com/your_logo.png',
+      order_id: 'YOUR_ORDER_ID',
+      handler: this.onPaymentResponse.bind(this),
+      prefill: {
+        name: 'Gaurav Kumar',
+        email: 'gaurav.kumar@example.com',
+        contact: '+919876543210'
+      },
+      notes: {
+        address: 'Razorpay Corporate Office'
+      },
+      theme: {
+        color: '#F37254'
+      }
+    };
+  
+    // const rzp = new Razorpay(options);
+    // rzp.open();
   }
 
   getbuyeraddress() {

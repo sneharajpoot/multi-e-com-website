@@ -42,22 +42,19 @@ export class GlobalService {
 
   ) {
 
-
     this.ImgUrl = this.rest.config.ImgUrl;
 
     this.loadData();
 
     this.LoggedUser.subscribe((data: any) => {
-      console.log(">>>>", data)
-
       if (data) {
         this.cuser = data;
-        console.log("this.cuser", this.cuser);
       };
       this.updateCart();
 
     });
   }
+
   loaderStart() { this.ngxService.start(); }
   loaderStop() { this.ngxService.stop(); }
 
@@ -77,15 +74,13 @@ export class GlobalService {
   }
 
   updateCart() {
-    console.log("this.cuser", this.cuser)
+
     if (this.cuser) {
       this.cardService.getcart({ buyer_id: this.cuser.id }).subscribe((data: any) => {
         this.cartsSrc.next(data.data);
       });
     } else {
-      let cart = this.getCartLocalStorage();
-
-      console.log("cart----", cart)
+      let cart = this.getCartLocalStorage() || [];
       this.cartsSrc.next(cart);
 
     }
@@ -766,13 +761,13 @@ export class GlobalService {
       if (carts[i].product_id == product_id) {
         carts.splice(i, 1);
         this.setLocalStorage('cartData', carts);
-        
+
         break;
       }
-      
+
     }
     this.updateCart();
- 
+
 
   }
 
