@@ -97,7 +97,7 @@ export class AddressselectComponent implements OnInit {
   }
 
   getbuyeraddress() {
-    this.buyerAddress.getbuyeraddress({ buyer_id: this.cBuyer.id }).subscribe(data => {
+    this.buyerAddress.getbuyeraddress({ buyer_id: this.cBuyer.id }).subscribe((data:any) => {
       console.log("data", data)
       this.myAddress = data.data;
     })

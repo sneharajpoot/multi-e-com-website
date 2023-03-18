@@ -99,7 +99,7 @@ export class GlobalService {
   NoOfTraderMonthWise() { return this.rest.get("NoOfTraderMonthWise"); }
   TotalCommission15Days() { return this.rest.get("TotalCommission15Days"); }
 
-  redirect(url: string, params = null) {
+  redirect(url: string, params = null) { 
     if (params == null) {
       this.router.navigate([url]);
     } else {
