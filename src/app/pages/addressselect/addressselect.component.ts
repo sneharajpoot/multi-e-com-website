@@ -3,12 +3,13 @@ import { BuyerAddressService } from 'src/app/service/api/buyer-address.service';
 import { CartService } from 'src/app/service/api/cart.service';
 import { OrdersService } from 'src/app/service/api/orders.service';
 import { GlobalService } from 'src/app/service/global.service';
+import { WindowRefService } from 'src/app/service/window-ref.service';
 
 // import { RazorpayService } from 'razorpay';
 // import { RazorpayService } from 'razorpay';
 // const Razorpay = require('razorpay')
- 
-// import { Razorpay } from 'razorpay';
+
+// import { Razorpay } from 'razorpay'; 
 // const Razorpay = require('razorpay');
 
 
@@ -18,7 +19,7 @@ import { GlobalService } from 'src/app/service/global.service';
   styleUrls: ['./addressselect.component.scss']
 })
 export class AddressselectComponent implements OnInit {
-  
+
 
   cBuyer: any;
   carts: any;
@@ -37,13 +38,14 @@ export class AddressselectComponent implements OnInit {
     public gbls: GlobalService,
     public cart: CartService,
     public buyerAddress: BuyerAddressService,
-    public order: OrdersService, 
+    public order: OrdersService,
+    private winRef: WindowRefService,
   ) {
     this.ImgUrl = this.gbls.ImgUrl
-  } 
+  }
 
   ngOnInit(): void {
- 
+
 
     this.gbls.LoggedUser.subscribe((data: any) => {
       if (data) {
@@ -65,39 +67,69 @@ export class AddressselectComponent implements OnInit {
     })
   }
 
-  onPaymentResponse(response:any) {
-    console.log(response);
-    // Handle the payment response here
-  }
-  openCheckout() {
-    const options = {
-      key: 'YOUR_RAZORPAY_KEY_ID',
-      amount: 50000, // amount in paisa
+  payment(orderID: number) {
+    let pp = {
+      amount: this.netAmount,
+      notes: 'from web ',
       currency: 'INR',
-      name: 'Acme Corp.',
-      description: 'Test Transaction',
-      image: 'https://example.com/your_logo.png',
-      order_id: 'YOUR_ORDER_ID',
-      handler: this.onPaymentResponse.bind(this),
-      prefill: {
-        name: 'Gaurav Kumar',
-        email: 'gaurav.kumar@example.com',
-        contact: '+919876543210'
-      },
-      notes: {
-        address: 'Razorpay Corporate Office'
-      },
-      theme: {
-        color: '#F37254'
-      }
-    };
-  
-    // const rzp = new Razorpay(options);
-    // rzp.open();
+      receipt: 'order_' + orderID,
+      orderID: orderID
+    }
+    this.gbls.payment(pp).subscribe(data => {
+      console.log(">>>", data.order.id);
+      this.createRzpayOrder(data);
+    })
   }
 
+  createRzpayOrder(data: any) {
+    console.log(data);
+    // call api to create order_id
+    // this.payWithRazor(order_id);
+    this.payWithRazor(data.order.id);
+  }
+
+
+  payWithRazor(val: any) {
+    const options: any = {
+      key: 'rzp_test_xyBvixSyDydvDx',
+      amount: this.netAmount, // amount should be in paise format to display Rs 1255 without decimal point
+      currency: 'INR',
+      name: '', // company name or product name
+      description: '',  // product description
+      image: './assets/logo.png', // company logo or product image
+      order_id: val, // order_id created by you in backend
+      modal: {
+        // We should prevent closing of the form when esc key is pressed.
+        escape: false,
+      },
+      notes: {
+        // include notes if any
+      },
+      theme: {
+        color: '#0c238a'
+      }
+    };
+    options.handler = ((response: any, error: any) => {
+      options.response = response;
+
+      this.gbls.redirect('/orderdetail')
+      console.log('error--------->', error);
+      console.log('response--------->', response);
+      console.log('options--------->', options);
+      // call your backend api to verify payment signature & capture transaction
+    });
+    options.modal.ondismiss = ((data: any) => {
+      console.log('---------->', data);
+      // handle the case when user closes the form while transaction is in progress
+      console.log('Transaction cancelled.');
+    });
+    const rzp = new this.winRef.nativeWindow.Razorpay(options);
+    rzp.open();
+  }
+
+
   getbuyeraddress() {
-    this.buyerAddress.getbuyeraddress({ buyer_id: this.cBuyer.id }).subscribe((data:any) => {
+    this.buyerAddress.getbuyeraddress({ buyer_id: this.cBuyer.id }).subscribe((data: any) => {
       console.log("data", data)
       this.myAddress = data.data;
     })
@@ -164,9 +196,9 @@ export class AddressselectComponent implements OnInit {
   placeorder() {
     try {
 
-      console.log("paymentType", this.paymentType)
-      console.log("paymentType", this.myAddress[this.cAddress])
-      console.log("paymentType", this.paymentType)
+      // console.log("paymentType", this.paymentType)
+      // console.log("paymentType", this.myAddress[this.cAddress])
+      // console.log("paymentType", this.paymentType)
       let body = {
         buyer_id: this.cBuyer.id,
         address_id: this.myAddress[this.cAddress]?.id,
@@ -178,15 +210,20 @@ export class AddressselectComponent implements OnInit {
         (data: any) => {
           this.gbls.loaderStop();
           if (data.result) {
-            // this.getcart(this.filter.buyer_id)
-            this.gbls.redirect('/orderdetail')
-            this.gbls.successNotification(data.message);
+            // Mack Payment
+            if (this.paymentType == 0) {
+              this.payment(data.response.orderID);
+            } else {
+              this.gbls.redirect('/orderdetail')
+              this.gbls.successNotification(data.message);
+            }
           } else {
             this.gbls.errorNotification(data.message);
           }
         },
         (error: any) => {
           this.gbls.loaderStop();
+          console.log("error", error.message || error);
           this.gbls.errorNotification('Server Not Responding');
         }
       );

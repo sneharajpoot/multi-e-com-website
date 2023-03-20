@@ -31,7 +31,19 @@ export class GlobalService {
 
   ImgUrl: string;
   cuser: any;
-
+  static:any = {
+    API_ROOT_URL: "http://localhost:8082",
+    VERIFY_LINK: "http://localhost:8082/verifylink?vlink=",
+    STATUS: ["PROCESSING", "BOOKED", "IN TRANSIT", "ONHOLD", "DELIVERED", "CANCELED", "RTO", "FAILED", "REFUNDED"],
+    PAYMENT_STATUS: ["PENDING", "PROCESSING", "COMPLEAT", "REFUNDED"]
+  }
+  detail:any = {
+    email: 'ajayrajpoot1993@gmail.com',
+    phone:'+91 9958243529',
+    copyright:'Copyright © 2013 E-SHOPPER Inc. All rights reserved.',
+    website:'http://www.jarha.in',
+    textwebsite:'jarha'
+  }
   constructor(
     protected rest: RestService,
     protected router: Router,
@@ -39,7 +51,6 @@ export class GlobalService {
     private activatedRoute: ActivatedRoute,
     private ngxService: NgxUiLoaderService,
     private cardService: CartService
-
   ) {
 
     this.ImgUrl = this.rest.config.ImgUrl;
@@ -76,7 +87,7 @@ export class GlobalService {
   updateCart() {
 
     if (this.cuser) {
-      this.cardService.getcart({ buyer_id: this.cuser.id }).subscribe((data: any) => {
+      this.cardService?.getcart({ buyer_id: this.cuser.id }).subscribe((data: any) => {
         this.cartsSrc.next(data.data);
       });
     } else {
@@ -98,8 +109,10 @@ export class GlobalService {
   //-----chart data
   NoOfTraderMonthWise() { return this.rest.get("NoOfTraderMonthWise"); }
   TotalCommission15Days() { return this.rest.get("TotalCommission15Days"); }
+  // amount,receipt
+  payment(p: any) { return this.rest.post("razorpay/orders/create", p); }
 
-  redirect(url: string, params = null) { 
+  redirect(url: string, params:any = null) {
     if (params == null) {
       this.router.navigate([url]);
     } else {

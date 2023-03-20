@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { OrderdetailRoutingModule } from './orderdetail-routing.module';
 import { OrderdetailComponent } from './orderdetail.component';
 import { FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     OrderdetailRoutingModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule
   ]
 })
 export class OrderdetailModule { }

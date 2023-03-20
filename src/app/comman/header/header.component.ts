@@ -9,11 +9,12 @@ import { GlobalService } from 'src/app/service/global.service';
 export class HeaderComponent implements OnInit {
   cUser: any;
   carts: any;
+  detail: any;
 
   constructor(public gbls: GlobalService) { }
 
   ngOnInit(): void {
-    
+    this.detail = this.gbls.detail;
     this.gbls.LoggedUser.subscribe((data: any) => {
       if (data) {
         this.cUser = data;

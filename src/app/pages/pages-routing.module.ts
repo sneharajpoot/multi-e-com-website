@@ -19,6 +19,13 @@ const routes: Routes = [
       { path: 'filter', loadChildren: () => import('./filter/filter.module').then(m => m.FilterModule) },
       { path: 'addressselect', loadChildren: () => import('./addressselect/addressselect.module').then(m => m.AddressselectModule) },
       { path: 'orderdetail', loadChildren: () => import('./orderdetail/orderdetail.module').then(m => m.OrderdetailModule) },
+      
+      { path: 'TermsofUse', loadChildren: () => import('./termsof-use/termsof-use.module').then(m => m.TermsofUseModule) },
+      { path: 'PrivecyPolicy', loadChildren: () => import('./privecy-policy/privecy-policy.module').then(m => m.PrivecyPolicyModule) },
+      { path: 'RefundPolicy', loadChildren: () => import('./refund-policy/refund-policy.module').then(m => m.RefundPolicyModule) },
+      
+  { path: 'ContactUs', loadChildren: () => import('./contact-us/contact-us.module').then(m => m.ContactUsModule) },
+  { path: 'faqs', loadChildren: () => import('./faqs/faqs.module').then(m => m.FaqsModule) },
 ]
   },
 ];

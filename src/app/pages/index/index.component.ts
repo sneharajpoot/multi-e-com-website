@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BrandService } from 'src/app/service/api/brand.service';
 import { CartService } from 'src/app/service/api/cart.service';
 import { CategoryService } from 'src/app/service/api/category.service';
 import { ProductService } from 'src/app/service/api/product.service';
@@ -15,16 +16,19 @@ export class IndexComponent implements OnInit {
   cUser: any;
   categorylist: any;
   categoryList: any;
+  bannerList: any;
 
   constructor(public gbls: GlobalService,
     public product: ProductService,
     public cart: CartService,
     public category: CategoryService,
-    ) {
+    public brand: BrandService,
+  ) {
     this.ImgUrl = this.gbls.ImgUrl;
 
     this.getProduct();
-    this.getCategory()
+    this.getCategory();
+    this.getBannerNo();
     // this.gbls.redirect('/product-details',{productId:});
   }
 
@@ -37,6 +41,7 @@ export class IndexComponent implements OnInit {
     this.gbls.redirect('/product-details', p);
   }
   
+
   redirectFilter(p: any) {
     this.gbls.redirect('/filter', p);
   }
@@ -51,8 +56,14 @@ export class IndexComponent implements OnInit {
       this.products = data.data.data;
     })
   }
-  
 
+
+  getBannerNo() {
+    let par = { banner_no: 1 }
+    this.brand.getBrand(par).subscribe(data => {
+      this.bannerList = data.data;
+    });
+  }
   getCategory() {
     let par = {}
     this.category.getCategory(par).subscribe(data => {

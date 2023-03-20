@@ -10,28 +10,36 @@
             <table class="table table-condensed">
                 <thead>
                     <tr class="cart_menu">
-                        <td class="image">Item</td> 
+                        <td class="image">Item</td>
                         <td></td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let i of ordersDetail?.orders">
+                    <tr
+                        *ngFor="let i of ordersDetail?.orders ; ">
                         <td class="cart_product">
                             <a href=""><img style="width: 50px; height: 50px;"
                                     [src]="ImgUrl + '/upload/' + i.icon_image" alt=""></a>
 
                             <p>{{i.title}}</p>
-                            <p>price: ${{i.price}}</p>
+                            <p>price: ${{i.item_price}}</p>
                             <p>quantity: {{i.quantity}}</p>
-                            <p>quantity: {{i.quantity}}</p>
-                           <p>payment status: {{i.payment_status}}</p> 
-                           <p>status: {{i.status}}</p> 
-                           <p>tracking status: {{i.tracking_status}}</p>
-<textarea [(ngModel)]="cancelcomment"></textarea>
-<input type="button" (click)="cancelorder(cancelcomment)" value="Cancel">
-                        </td> 
+                           <p>payment status: {{ PAYMENT_STATUS[i.payment_status]}}</p>
+                             <p>status: {{ STATUS[i.status || 0]}}</p>
+                            <!-- <p>tracking status: {{i.tracking_status}}</p> -->
+                            <textarea [(ngModel)]="cancelcomment"></textarea>
+                            <input type="button" (click)="cancelorder(cancelcomment)" value="Cancel">
+                        </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td> 
+                            <button [disabled]="!ordersDetail?.previous"  (click)="changePage(pages.currentPage - 1)">Privious</button>
+                            <button [disabled]="!ordersDetail?.next"  (click)="changePage(pages.currentPage+ 1)">Next</button>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

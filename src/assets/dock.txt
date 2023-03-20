@@ -18,6 +18,17 @@ ng g module pages/orderdetail --route orderdetail --module app.module
 ng g module pages/wishlist --route wishlist --module app.module
 ng g module pages/account --route account --module app.module
 
+ng g module pages/TermsofUse --route TermsofUse --module app.module
+ng g module pages/PrivecyPolicy --route PrivecyPolicy --module app.module
+ng g module pages/RefundPolicy --route RefundPolicy --module app.module
+ng g module pages/ContactUs --route ContactUs --module app.module
+ng g module pages/faqs --route faqs --module app.module
+
+
+ContactUs
+faqs
+
+
 
 ng g s service/api/review
 

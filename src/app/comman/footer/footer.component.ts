@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GlobalService } from 'src/app/service/global.service';
 
 @Component({
   selector: 'app-footer',
@@ -6,8 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
+  detail: any;
 
-  constructor() { }
+  constructor(private gbls: GlobalService) {
+    this.detail = this.gbls.detail;
+
+  }
 
   ngOnInit(): void {
   }
